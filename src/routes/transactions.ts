@@ -1,9 +1,7 @@
 import express from 'express';
+import { addIncome } from '../controllers/income';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
+router.post('/add-income', addIncome);
 export default router;
