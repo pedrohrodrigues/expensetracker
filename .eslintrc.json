@@ -1,16 +1,17 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended"
-    ],
-    "plugins": ["@typescript-eslint", "prettier"],
-    "rules": {
-      "prettier/prettier": "error"
-    },
-    "env": {
-      "node": true,
-      "es6": true
-    }
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2020, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module" // Allows for the use of imports
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"]
+  },
+  "env": {
+    "node": true,
+    "es6": true
   }
+}
