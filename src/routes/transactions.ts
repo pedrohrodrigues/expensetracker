@@ -1,7 +1,12 @@
 import express from 'express';
-import { addIncome } from '../controllers/income';
+import { addIncome, deleteIncome, getIncome } from '../controllers/income';
 
 const router = express.Router();
 
 router.post('/add-income', addIncome);
+
+router.get('/get-income', getIncome);
+
+router.delete('/delete-income/:id', deleteIncome);
+
 export default router;

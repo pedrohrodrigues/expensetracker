@@ -42,3 +42,25 @@ export const addIncome = async (req: Request<addIncomeDto>, res: Response) => {
     });
   }
 };
+
+export const getIncome = async (req: Request, res: Response) => {
+  try {
+    const incomes = await IncomeSchema.find().sort({ createAt: -1 });
+    res.status(200).json(incomes);
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export const deleteIncome = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  console.log({ id });
+  IncomeSchema.findByIdAndDelete(id)
+    .then(() => {
+      res.status(200).json({ message: 'Income Deleted' });
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Server Error' });
+    });
+};
