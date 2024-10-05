@@ -89,12 +89,10 @@ describe('getIncome', () => {
   });
 
   afterEach(() => {
-    jsonMock.mockClear();
     jest.resetAllMocks();
   });
 
-  it('should return all income', async () => {
-    // Mocking the chainable query
+  it('should return all incomes', async () => {
     const mockQuery = {
       sort: jest.fn().mockResolvedValue([
         {
@@ -130,6 +128,8 @@ describe('getIncome', () => {
 
 describe('deleteIncome', () => {
   const mockID = 'testID';
+  const jsonDeleteMock = jest.fn();
+
   let mockResponse: Partial<Response>;
   const deleteMockRequest = {
     params: {
@@ -139,12 +139,13 @@ describe('deleteIncome', () => {
 
   beforeEach(() => {
     mockResponse = {
-      json: jest.fn(),
+      json: jsonDeleteMock,
       status: jest.fn().mockReturnThis(),
     } as Partial<Response>;
   });
 
   afterEach(() => {
+    jsonDeleteMock.mockClear();
     jest.resetAllMocks();
   });
 
@@ -152,8 +153,26 @@ describe('deleteIncome', () => {
     (IncomeSchema.findByIdAndDelete as jest.Mock).mockResolvedValueOnce({});
     await deleteIncome(deleteMockRequest as Request, mockResponse as Response);
     expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
-    expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith('testID');
+    expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(200);
+  });
+  it('if and error happens should return 500', async () => {
+    (IncomeSchema.findByIdAndDelete as jest.Mock).mockRejectedValueOnce({});
+    await deleteIncome(deleteMockRequest as Request, mockResponse as Response);
+    expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Server Error' });
+  });
+  it('if a wrong id is provided should return 404', async () => {
+    (IncomeSchema.findByIdAndDelete as jest.Mock).mockResolvedValueOnce(null);
+    await deleteIncome(deleteMockRequest as Request, mockResponse as Response);
+    expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
+    expect(mockResponse.status).toHaveBeenCalledTimes(2);
+    expect(mockResponse.status).toHaveBeenCalledWith(404);
+    expect(mockResponse.json).toHaveBeenCalledTimes(2);
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Income not found' });
   });
 });
