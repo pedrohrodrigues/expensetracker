@@ -1,3 +1,4 @@
+import './../assets/css/sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUserTie,
@@ -5,9 +6,45 @@ import {
   faCreditCard,
   faMoneyBillTrendUp,
   faMoneyBillTransfer,
+  IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 
-export const ExpensesAppLeftSidebar = () => {
+interface MenuItem {
+  name: string;
+  icon: IconDefinition;
+  link: string;
+}
+
+const menuItems: MenuItem[] = [
+  {
+    name: 'Dashboard',
+    icon: faChartLine,
+    link: '/dashboard',
+  },
+  {
+    name: 'Transactions',
+    icon: faCreditCard,
+    link: '/transactions',
+  },
+  {
+    name: 'Incomes',
+    icon: faMoneyBillTrendUp,
+    link: '/incomes',
+  },
+  {
+    name: 'Expenses',
+    icon: faMoneyBillTransfer,
+    link: '/expenses',
+  },
+];
+
+interface expensesAppLeftSidebarProps {
+  activePath: number;
+  setActivePath: (index: number) => void;
+}
+
+export const ExpensesAppLeftSidebar = (props: expensesAppLeftSidebarProps) => {
+  console.log(props.activePath);
   return (
     <aside className="rounded-lg border-2 border-white h-full bg-white lg:w-1/5 box-border p-4 w-3/4 mb-6 lg:mb-0">
       <div className="flex align-items-center h-20">
@@ -20,20 +57,15 @@ export const ExpensesAppLeftSidebar = () => {
         </div>
       </div>
       <ul className="mt-4">
-        <li className="my-1 cursor-pointer">
-          <FontAwesomeIcon icon={faChartLine} className="mr-2" /> Dashboard
-        </li>
-        <li className="my-1 cursor-pointer">
-          <FontAwesomeIcon icon={faCreditCard} className="mr-2" /> View
-          Transactions
-        </li>
-        <li className="my-1 cursor-pointer">
-          <FontAwesomeIcon icon={faMoneyBillTrendUp} className="mr-2" /> Incomes
-        </li>
-        <li className="my-1 cursor-pointer">
-          <FontAwesomeIcon icon={faMoneyBillTransfer} className="mr-2" />
-          Expenses
-        </li>
+        {menuItems.map((item, index) => (
+          <li
+            className={`my-1 cursor-pointer ${props.activePath === index ? 'active-path' : ''}`}
+            key={index}
+            onClick={() => props.setActivePath(index)}
+          >
+            <FontAwesomeIcon icon={item.icon} className="mr-2" /> {item.name}
+          </li>
+        ))}
       </ul>
     </aside>
   );

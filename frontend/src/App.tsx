@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ExpensesAppHeader } from './components/header';
 import { ExpensesAppLeftSidebar } from './components/leftSidebar';
-import { ExpensesAppDashboard } from './components/dashboard';
+import { DashboardAppDashboard } from './components/dashboard';
+import { IncomesAppDashboard } from './components/incomes';
+import { TransactionsAppDashboard } from './components/transactions';
+import { ExpensesAppDashboard } from './components/expenses';
 
 function App() {
+  const [activePath, setActivePath] = useState(0);
+  const displayMainContent = () => {
+    switch (activePath) {
+      case 0:
+        return <DashboardAppDashboard />;
+      case 1:
+        return <TransactionsAppDashboard />;
+      case 2:
+        return <IncomesAppDashboard />;
+      case 3:
+        return <ExpensesAppDashboard />;
+      default:
+        return <DashboardAppDashboard />;
+    }
+  };
   return (
     <div className="place-content-center w-full flex lg:min-h-[660px] lg:h-5/6 lg:absolute">
       <main className="max-w-[1080px] mt-4 flex flex-wrap lg:justify-between h-full w-full justify-center">
         <ExpensesAppHeader />
-        <ExpensesAppLeftSidebar />
-        <ExpensesAppDashboard />
+        <ExpensesAppLeftSidebar
+          activePath={activePath}
+          setActivePath={setActivePath}
+        />
+        {displayMainContent()}
       </main>
     </div>
   );
