@@ -44,7 +44,6 @@ interface expensesAppLeftSidebarProps {
 }
 
 export const ExpensesAppLeftSidebar = (props: expensesAppLeftSidebarProps) => {
-  console.log(props.activePath);
   return (
     <aside className="rounded-lg border-2 border-white h-full bg-white lg:w-1/5 box-border p-4 w-3/4 mb-6 lg:mb-0">
       <div className="flex align-items-center h-20">

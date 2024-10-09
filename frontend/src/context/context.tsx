@@ -1,46 +1,63 @@
-import axios from 'axios';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useReducer } from 'react';
+import { getIncomeDto } from '../types/dtoTypes';
+import {
+  IncomeAction,
+  IncomeActionTypes,
+} from '../stateManagement/actions/incomeActions';
+import { getIncomeReducer } from '../stateManagement/reducers/getIncomeReducer';
 
 interface ExpensesAppProviderProps {
   children: React.ReactNode;
 }
 interface ExpensesAppContextType {
-  setExampleValue: React.Dispatch<React.SetStateAction<string>>;
+  expensesAppState: ExpensesAppStateType;
+  expensesAppDispatch: React.Dispatch<IncomeAction>;
 }
 const ExpensesAppContext = createContext<ExpensesAppContextType | undefined>(
   undefined,
 );
 
-interface addIncomeDto {
-  title: string;
-  category: string;
-  amount: number;
-  description: string;
-  date: Date;
+export interface ExpensesAppStateType {
+  incomes: getIncomeDto[];
 }
 
-export const AppProvider = ({ children }: ExpensesAppProviderProps) => {
-  const [exampleValue, setExampleValue] = useState<string>('default value');
-  const [incomes, setIncomes] = useState<[]>([]);
-  const [expenses, setExpenses] = useState<[]>([]);
-  const [error, setError] = useState(null);
-
-  const addIncome = async (income: addIncomeDto) => {
-    const response = await axios
-      .post('${BASE_URL}add-income', income)
-      .catch((err) => {
-        setError(err.response.data.message);
-      });
+export const ExpensesAppProvider = ({ children }: ExpensesAppProviderProps) => {
+  const initialState = {
+    incomes: [],
   };
 
-  //   const value = {
-  //     exampleValue,
-  //     addIncome,
-  //   };
-  //   return (
-  //     <ExpensesAppContext.Provider value={value}>
-  //       {children}
-  //     </ExpensesAppContext.Provider>
-  //   );
-  // };
+  function reducer(state: ExpensesAppStateType, action: IncomeAction) {
+    switch (action.type) {
+      case IncomeActionTypes.GET_INCOME:
+        return getIncomeReducer(state);
+      default:
+        return state;
+    }
+  }
+
+  const [expensesAppState, expensesAppDispatch] = useReducer(
+    reducer,
+    initialState,
+  );
+
+  const value = {
+    expensesAppState,
+    expensesAppDispatch,
+  };
+
+  return (
+    <ExpensesAppContext.Provider value={value}>
+      {children}
+    </ExpensesAppContext.Provider>
+  );
+};
+
+export const useExpensesAppContext = () => {
+  const context = React.useContext(ExpensesAppContext);
+  if (context === undefined) {
+    throw new Error(
+      'useExpensesAppContext must be used within a ExpensesAppProvider',
+    );
+  }
+  return context;
 };
