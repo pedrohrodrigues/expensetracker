@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useExpensesAppContext } from '../context/context';
 import { getIncome } from '../apiRequests/apiRequests';
 import { IncomeActionTypes } from '../stateManagement/actions/incomeActions';
-import { calculateTotalIncomesValue } from '../helpers';
+import { calculateTotalIncomesValue } from '../helpers/incomeHelpers';
 
 export const ListIncomesAppDashboard = () => {
   const { expensesAppState, expensesAppDispatch } = useExpensesAppContext();
