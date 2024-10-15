@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { addIncomeDto } from '../types/dtoTypes';
 
-export const IncomesAppDashboard = () => {
+export const AddIncomesAppDashboard = () => {
   const defaultIncomeValues: addIncomeDto = {
     title: '',
     category: '',

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ExpensesAppHeader } from './components/header';
 import { ExpensesAppLeftSidebar } from './components/leftSidebar';
 import { DashboardAppDashboard } from './components/dashboard';
-import { IncomesAppDashboard } from './components/incomes';
+import { ListIncomesAppDashboard } from './components/listIncomes';
 import { TransactionsAppDashboard } from './components/transactions';
 import { ExpensesAppDashboard } from './components/expenses';
 
@@ -15,7 +15,7 @@ function App() {
       case 1:
         return <TransactionsAppDashboard />;
       case 2:
-        return <IncomesAppDashboard />;
+        return <ListIncomesAppDashboard />;
       case 3:
         return <ExpensesAppDashboard />;
       default:

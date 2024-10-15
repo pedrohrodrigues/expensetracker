@@ -1,18 +1,13 @@
 import { ExpensesAppStateType } from '../../context/context';
-import { getIncomeDto } from '../../types/dtoTypes';
+import { getIncomeAction } from '../actions/incomeActions';
 
 export const getIncomeReducer = (
   state: ExpensesAppStateType,
+  action: getIncomeAction,
 ): ExpensesAppStateType => {
-  const testIncomes: getIncomeDto = {
-    title: 'Test Income',
-    category: 'Category',
-    amount: 2,
-    description: 'Test Description',
-    date: new Date(),
-  };
+  const incomes = action.payload;
   return {
     ...state,
-    incomes: [testIncomes],
+    incomes: incomes,
   };
 };

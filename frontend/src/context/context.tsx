@@ -28,8 +28,8 @@ export const ExpensesAppProvider = ({ children }: ExpensesAppProviderProps) => {
 
   function reducer(state: ExpensesAppStateType, action: IncomeAction) {
     switch (action.type) {
-      case IncomeActionTypes.GET_INCOME:
-        return getIncomeReducer(state);
+      case IncomeActionTypes.GetIncome:
+        return getIncomeReducer(state, action);
       default:
         return state;
     }
