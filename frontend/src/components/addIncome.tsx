@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { addIncomeDto } from '../types/dtoTypes';
+import 'react-datepicker/dist/react-datepicker.css';
+import { addIncome } from '../apiRequests/apiRequests';
 
 export const AddIncomesAppDashboard = () => {
   const defaultIncomeValues: addIncomeDto = {
@@ -16,9 +18,19 @@ export const AddIncomesAppDashboard = () => {
   const { title, category, amount, description, date } = inputIncomeState;
   const handleInput =
     (name: keyof addIncomeDto) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
+    ) => {
       setInputIncomeState({ ...inputIncomeState, [name]: e.target.value });
     };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await addIncome(inputIncomeState);
+    return;
+  };
 
   const handleDateChange = (date: Date | null) => {
     if (date === null) {
@@ -28,21 +40,27 @@ export const AddIncomesAppDashboard = () => {
     }
   };
   return (
-    <div className="w-3/4 bg-white h-full box-border p-4 rounded-lg border-2">
-      <h2>Incomes</h2>
+    <div className="w-3/4 h-full box-border p-4 rounded-lg border-2">
+      <h3 className="text-1xl font-bold pb-2">Add Income</h3>
       <div>
-        <form>
-          <div>
+        <form onSubmit={handleSubmit}>
+          <div className="pb-2">
             <input
               type="text"
               value={title}
               name={'title'}
               placeholder="Income Title"
               onChange={handleInput('title')}
+              className="w-full"
             />
           </div>
-          <div>
-            <select value={category} name="category">
+          <div className="pb-2">
+            <select
+              value={category}
+              name="category"
+              className="w-full"
+              onChange={handleInput('category')}
+            >
               <option value="" disabled>
                 Select Category
               </option>
@@ -52,42 +70,40 @@ export const AddIncomesAppDashboard = () => {
               <option value="gift">Gift</option>
               <option value="other">Other</option>
             </select>
-            <input
-              type="text"
-              value={category}
-              name={'category'}
-              placeholder="Category"
-              onChange={handleInput('category')}
-            />
           </div>
-          <div>
+          <div className="pb-2">
             <input
               type="number"
               value={amount}
               name={'amount'}
               placeholder="Amount"
               onChange={handleInput('amount')}
+              className="w-full"
             />
           </div>
-          <div>
+          <div className="pb-2">
             <textarea
               value={description}
               name={'description'}
               placeholder="Description"
               onChange={handleInput('description')}
+              className="w-full"
             ></textarea>
           </div>
-          <div>
+          <div className="pb-2">
             <DatePicker
               id="date"
               placeholderText="Enter a date"
               selected={date}
               dateFormat="dd/MM/yyyy"
               onChange={(date) => handleDateChange(date)}
+              className="w-full"
             />
           </div>
           <div>
-            <button type="submit">Add Income</button>
+            <button type="submit" className="bg-green-400 rounded p-2">
+              Add Income
+            </button>
           </div>
         </form>
       </div>
