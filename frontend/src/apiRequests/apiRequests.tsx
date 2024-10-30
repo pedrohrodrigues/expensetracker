@@ -2,9 +2,12 @@ import { addIncomeDto, getIncomeDto } from '../types/dtoTypes';
 import axios from 'axios';
 const BASE_URL = 'http://localhost:5001/api/v1/';
 
-export const addIncome = async (income: addIncomeDto): Promise<void> => {
+export const addIncome = async (
+  income: addIncomeDto,
+): Promise<number | undefined> => {
   try {
-    await axios.post(`${BASE_URL}add-income`, income);
+    const result = await axios.post(`${BASE_URL}add-income`, income);
+    return result.status;
   } catch (error) {
     if (error instanceof Error) {
       console.log('Error adding incomes:', error.message);

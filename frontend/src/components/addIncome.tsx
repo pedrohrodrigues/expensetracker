@@ -4,7 +4,18 @@ import { addIncomeDto } from '../types/dtoTypes';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addIncome } from '../apiRequests/apiRequests';
 
-export const AddIncomesAppDashboard = () => {
+interface AddIncomesAppDashboardProps {
+  refreshList: () => void;
+}
+
+interface onSubmitMessageProps {
+  message: string;
+  color: string;
+}
+
+export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
+  refreshList,
+}) => {
   const defaultIncomeValues: addIncomeDto = {
     title: '',
     category: '',
@@ -12,8 +23,13 @@ export const AddIncomesAppDashboard = () => {
     description: '',
     date: new Date(),
   };
+
   const [inputIncomeState, setInputIncomeState] =
     useState<addIncomeDto>(defaultIncomeValues);
+  const [onSubmitMessage, setOnSubmitMessage] = useState<onSubmitMessageProps>({
+    message: '',
+    color: '',
+  });
 
   const { title, category, amount, description, date } = inputIncomeState;
   const handleInput =
@@ -28,7 +44,20 @@ export const AddIncomesAppDashboard = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await addIncome(inputIncomeState);
+    const result = await addIncome(inputIncomeState);
+    console.log({ result });
+    if (result === 200) {
+      setOnSubmitMessage({
+        message: 'Income added successfully',
+        color: 'green',
+      });
+    } else {
+      setOnSubmitMessage({
+        message: 'Error trying to add income please try again',
+        color: 'red',
+      });
+    }
+    refreshList();
     return;
   };
 
@@ -105,6 +134,11 @@ export const AddIncomesAppDashboard = () => {
               Add Income
             </button>
           </div>
+          {onSubmitMessage.message.length > 0 && (
+            <p style={{ color: onSubmitMessage.color }}>
+              {onSubmitMessage.message}
+            </p>
+          )}
         </form>
       </div>
     </div>
