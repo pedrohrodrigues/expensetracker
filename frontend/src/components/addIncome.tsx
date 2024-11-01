@@ -68,6 +68,12 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
       setInputIncomeState({ ...inputIncomeState, date: date });
     }
   };
+  const CustomDateInput = React.forwardRef<HTMLInputElement>((props, ref) => (
+    <input data-testid="date-input" {...props} ref={ref} />
+  ));
+
+  CustomDateInput.displayName = 'date';
+
   return (
     <div className="w-3/4 h-full box-border p-4 rounded-lg border-2">
       <h3 className="text-1xl font-bold pb-2">Add Income</h3>
@@ -75,6 +81,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
         <form onSubmit={handleSubmit} data-testid="add-income-form">
           <div className="pb-2">
             <input
+              data-testId={'title'}
               type="text"
               value={title}
               name={'title'}
@@ -85,6 +92,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
           </div>
           <div className="pb-2">
             <select
+              data-testId={'category'}
               value={category}
               name="category"
               className="w-full"
@@ -102,6 +110,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
           </div>
           <div className="pb-2">
             <input
+              data-testId={'amount'}
               type="number"
               value={amount}
               name={'amount'}
@@ -112,6 +121,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
           </div>
           <div className="pb-2">
             <textarea
+              data-testId={'description'}
               value={description}
               name={'description'}
               placeholder="Description"
@@ -121,6 +131,9 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
           </div>
           <div className="pb-2">
             <DatePicker
+              aria-label="date-input"
+              name={'date'}
+              customInput={<CustomDateInput />}
               id="date"
               placeholderText="Enter a date"
               selected={date}
@@ -130,7 +143,11 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
             />
           </div>
           <div>
-            <button type="submit" className="bg-green-400 rounded p-2">
+            <button
+              type="submit"
+              data-testId={'submit'}
+              className="bg-green-400 rounded p-2"
+            >
               Add Income
             </button>
           </div>
