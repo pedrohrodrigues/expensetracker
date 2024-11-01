@@ -72,7 +72,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
     <div className="w-3/4 h-full box-border p-4 rounded-lg border-2">
       <h3 className="text-1xl font-bold pb-2">Add Income</h3>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid="add-income-form">
           <div className="pb-2">
             <input
               type="text"

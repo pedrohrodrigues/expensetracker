@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { addIncomeDto } from '../../types/dtoTypes';
 import { addIncome, getIncome } from '../apiRequests';
-const BASE_URL = 'http://localhost:5001/api/v1/';
+import { BASE_URL } from '../apiRequests';
 
 jest.mock('axios');
 

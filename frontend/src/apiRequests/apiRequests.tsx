@@ -1,6 +1,6 @@
 import { addIncomeDto, getIncomeDto } from '../types/dtoTypes';
 import axios from 'axios';
-const BASE_URL = 'http://localhost:5001/api/v1/';
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const addIncome = async (
   income: addIncomeDto,
