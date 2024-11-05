@@ -55,4 +55,13 @@ describe('addIncome', () => {
       });
     });
   });
+
+  it('should return an error message if a field of the form is empty', async () => {
+    render(<AddIncomesAppDashboard refreshList={refreshListMock} />);
+    const form = await screen.findByTestId('add-income-form');
+    expect(form).toBeInTheDocument();
+    fireEvent.submit(form);
+    const submitMessage = await screen.findByTestId('submit-message');
+    expect(submitMessage).toHaveTextContent('Please fill all required fields');
+  });
 });

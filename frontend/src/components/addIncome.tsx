@@ -44,8 +44,14 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!title || !amount || !description || !date || !category) {
+      setOnSubmitMessage({
+        message: 'Please fill all required fields',
+        color: 'red',
+      });
+      return;
+    }
     const result = await addIncome(inputIncomeState);
-    console.log({ result });
     if (result === 200) {
       setOnSubmitMessage({
         message: 'Income added successfully',
@@ -152,7 +158,10 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
             </button>
           </div>
           {onSubmitMessage.message.length > 0 && (
-            <p style={{ color: onSubmitMessage.color }}>
+            <p
+              data-testId={'submit-message'}
+              style={{ color: onSubmitMessage.color }}
+            >
               {onSubmitMessage.message}
             </p>
           )}
