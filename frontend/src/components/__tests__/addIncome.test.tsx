@@ -15,6 +15,7 @@ jest.mock('axios');
 
 describe('addIncome', () => {
   beforeEach(() => {
+    render(<AddIncomesAppDashboard refreshList={refreshListMock} />);
     jest.clearAllMocks();
   });
   it('should make a successful POST request with valid income data', async () => {
@@ -26,24 +27,20 @@ describe('addIncome', () => {
         data: { success: true, message: 'Income added successfully' },
       }),
     );
-    render(<AddIncomesAppDashboard refreshList={refreshListMock} />);
     const form = await screen.findByTestId('add-income-form');
     expect(form).toBeInTheDocument();
-    const titleInput = await screen.findByTestId('title');
-    const categoryInput = await screen.findByTestId('category');
-    const amountInput = await screen.findByTestId('amount');
-    const descriptionInput = await screen.findByTestId('description');
-    const dateInput = await screen.findByTestId('date-input');
+    const fields = [
+      { name: 'title', value: 'Test Income' },
+      { name: 'category', value: 'salary' },
+      { name: 'amount', value: 100 },
+      { name: 'description', value: 'Test Description' },
+      { name: 'date-input', value: '2022-01-01' },
+    ];
 
-    const date = new Date('2022-01-01');
-
-    fireEvent.change(titleInput, { target: { value: 'Test Income' } });
-    fireEvent.change(categoryInput, { target: { value: 'salary' } });
-    fireEvent.change(amountInput, { target: { value: 100 } });
-    fireEvent.change(descriptionInput, {
-      target: { value: 'Test Description' },
+    fields.forEach(({ name, value }) => {
+      fireEvent.change(screen.getByTestId(name), { target: { value } });
     });
-    fireEvent.change(dateInput, { target: { value: date } });
+
     fireEvent.submit(form);
     await waitFor(() => {
       expect(mockedAxiosPost).toHaveBeenCalledWith(`${BASE_URL}add-income`, {
@@ -56,12 +53,79 @@ describe('addIncome', () => {
     });
   });
 
-  it('should return an error message if a field of the form is empty', async () => {
-    render(<AddIncomesAppDashboard refreshList={refreshListMock} />);
+  it('should return an error message if a field the form is empty', async () => {
     const form = await screen.findByTestId('add-income-form');
     expect(form).toBeInTheDocument();
     fireEvent.submit(form);
     const submitMessage = await screen.findByTestId('submit-message');
     expect(submitMessage).toHaveTextContent('Please fill all required fields');
+  });
+
+  describe('AddIncomeAppDashboard input validations', () => {
+    const getInputFormFieldValue = (fieldName: string): string | number => {
+      switch (fieldName) {
+        case 'title':
+          return 'input title';
+        case 'category':
+          return 'salary';
+        case 'amount':
+          return '100';
+        case 'description':
+          return 'description';
+        default:
+          return '';
+      }
+    };
+    async function expectErrorMessage() {
+      const submitMessage = await screen.findByTestId('submit-message');
+      expect(submitMessage).toHaveTextContent(
+        'Please fill all required fields',
+      );
+    }
+
+    it('should return an error message if a field the form is empty', async () => {
+      const form = await screen.findByTestId('add-income-form');
+      expect(form).toBeInTheDocument();
+      fireEvent.submit(form);
+      const submitMessage = await screen.findByTestId('submit-message');
+      expect(submitMessage).toHaveTextContent(
+        'Please fill all required fields',
+      );
+    });
+
+    // Date doesn't need to be tested since it always has a default value
+
+    const fields = [
+      {
+        name: 'title',
+      },
+      {
+        name: 'category',
+      },
+      {
+        name: 'amount',
+      },
+      {
+        name: 'description',
+      },
+    ];
+
+    it.each(fields)(
+      'displays an error message when the %s field is empty',
+      async (field) => {
+        const form = await screen.findByTestId('add-income-form');
+
+        fields
+          .filter((f) => f.name !== field.name)
+          .forEach((f) =>
+            fireEvent.change(screen.getByTestId(f.name), {
+              target: { value: getInputFormFieldValue(f.name) },
+            }),
+          );
+
+        fireEvent.submit(form);
+        await expectErrorMessage();
+      },
+    );
   });
 });
