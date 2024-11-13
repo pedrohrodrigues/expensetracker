@@ -9,11 +9,7 @@ export const addIncome = async (
     const result = await axios.post(`${BASE_URL}add-income`, income);
     return result.status;
   } catch (error) {
-    if (error instanceof Error) {
-      console.log('Error adding incomes:', error.message);
-    } else {
-      console.log('Error adding incomes:', error);
-    }
+    console.log('Error adding incomes:', error);
   }
 };
 

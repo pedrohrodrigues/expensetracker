@@ -18,47 +18,39 @@ describe('addIncome', () => {
     render(<AddIncomesAppDashboard refreshList={refreshListMock} />);
     jest.clearAllMocks();
   });
-  it('should make a successful POST request with valid income data', async () => {
-    const mockedAxiosPost = axios.post as jest.MockedFunction<
-      typeof axios.post
-    >;
-    mockedAxiosPost.mockImplementation(() =>
-      Promise.resolve({
-        data: { success: true, message: 'Income added successfully' },
-      }),
-    );
-    const form = await screen.findByTestId('add-income-form');
-    expect(form).toBeInTheDocument();
-    const fields = [
-      { name: 'title', value: 'Test Income' },
-      { name: 'category', value: 'salary' },
-      { name: 'amount', value: 100 },
-      { name: 'description', value: 'Test Description' },
-      { name: 'date-input', value: '2022-01-01' },
-    ];
-
-    fields.forEach(({ name, value }) => {
-      fireEvent.change(screen.getByTestId(name), { target: { value } });
-    });
-
-    fireEvent.submit(form);
-    await waitFor(() => {
-      expect(mockedAxiosPost).toHaveBeenCalledWith(`${BASE_URL}add-income`, {
+  describe('When all fields are provided', () => {
+    it('should make a successful POST request with valid income data   ', async () => {
+      axios.post = jest.fn().mockResolvedValue({});
+      const mockResponse = {
         title: 'Test Income',
         category: 'salary',
         amount: '100',
         description: 'Test Description',
         date: expect.any(Date),
+      };
+      const form = await screen.findByTestId('add-income-form');
+      expect(form).toBeInTheDocument();
+      const fields = [
+        { name: 'title', value: 'Test Income' },
+        { name: 'category', value: 'salary' },
+        { name: 'amount', value: 100 },
+        { name: 'description', value: 'Test Description' },
+        { name: 'date-input', value: '2022-01-01' },
+      ];
+
+      fields.forEach(({ name, value }) => {
+        fireEvent.change(screen.getByTestId(name), { target: { value } });
+      });
+
+      fireEvent.submit(form);
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledTimes(1);
+        expect(axios.post).toHaveBeenCalledWith(
+          `${BASE_URL}add-income`,
+          mockResponse,
+        );
       });
     });
-  });
-
-  it('should return an error message if a field the form is empty', async () => {
-    const form = await screen.findByTestId('add-income-form');
-    expect(form).toBeInTheDocument();
-    fireEvent.submit(form);
-    const submitMessage = await screen.findByTestId('submit-message');
-    expect(submitMessage).toHaveTextContent('Please fill all required fields');
   });
 
   describe('AddIncomeAppDashboard input validations', () => {
@@ -111,7 +103,7 @@ describe('addIncome', () => {
     ];
 
     it.each(fields)(
-      'displays an error message when the %s field is empty',
+      'displays an error message if the %s field is empty',
       async (field) => {
         const form = await screen.findByTestId('add-income-form');
 
