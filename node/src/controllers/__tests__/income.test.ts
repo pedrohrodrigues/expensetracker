@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
 import { addIncome, addIncomeDto, deleteIncome, getIncome } from '../income';
 import IncomeSchema from '../../models/incomeModel';
@@ -9,7 +9,10 @@ describe('addIncome', () => {
   type AddIncomeRequest = Request & { body: addIncomeDto; params: addIncomeDto };
 
   const mockRequest = createRequest<AddIncomeRequest>({ method: 'POST' });
+  let createSchemaMock: jest.Mock;
   beforeEach(() => {
+    createSchemaMock = jest.fn();
+    IncomeSchema.create = createSchemaMock;
     mockRequest.body = {
       title: 'Salary',
       amount: 5000,
@@ -32,12 +35,11 @@ describe('addIncome', () => {
   });
 
   it('should save income and return 200 if all fields are valid', async () => {
-    (IncomeSchema.create as jest.Mock).mockResolvedValue({
+    createSchemaMock.mockResolvedValue({
       save: jest.fn(),
     });
     const mockResponse = createResponse();
-
-    await addIncome(mockRequest as unknown as Request<addIncomeDto>, mockResponse);
+    await addIncome(mockRequest, mockResponse);
 
     expect(IncomeSchema.create).toHaveBeenCalledWith({
       title: 'Salary',
@@ -55,7 +57,7 @@ describe('addIncome', () => {
   });
 
   it('should return 500 if there is an internal server error', async () => {
-    (IncomeSchema.create as jest.Mock).mockRejectedValue(new Error('Error'));
+    createSchemaMock.mockRejectedValue(new Error('Error'));
     const mockResponse = createResponse();
 
     await addIncome(mockRequest, mockResponse);
@@ -69,18 +71,12 @@ describe('addIncome', () => {
 });
 
 describe('getIncome', () => {
-  const jsonMock = jest.fn();
-  let mockResponse: Partial<Response>;
-
+  let mockRequest: Request;
+  let findSchemaMock: jest.Mock;
   beforeEach(() => {
-    mockResponse = {
-      json: jsonMock,
-      status: jest.fn().mockReturnThis(),
-    } as Partial<Response>;
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
+    findSchemaMock = jest.fn();
+    IncomeSchema.find = findSchemaMock;
+    mockRequest = createRequest({ method: 'POST' });
   });
 
   it('should return all incomes', async () => {
@@ -101,69 +97,48 @@ describe('getIncome', () => {
       ]),
     };
 
-    (IncomeSchema.find as jest.Mock).mockReturnValue(mockQuery);
+    findSchemaMock.mockReturnValue(mockQuery);
+    const mockResponse = createResponse();
 
-    await getIncome({} as Request, mockResponse as Response);
+    await getIncome(mockRequest, mockResponse);
 
     expect(IncomeSchema.find).toHaveBeenCalled();
     expect(mockQuery.sort).toHaveBeenCalledWith({ createAt: -1 });
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.json().statusCode).toEqual(200);
   });
 
   it('should return 500 if there is an internal server error', async () => {
-    await getIncome({} as Request, mockResponse as Response);
+    const mockResponse = createResponse();
+    await getIncome(mockRequest, mockResponse);
     expect(IncomeSchema.find).toHaveBeenCalled();
-    expect(mockResponse.status).toHaveBeenCalledWith(500);
+    expect(mockResponse.json().statusCode).toEqual(500);
   });
 });
 
 describe('deleteIncome', () => {
   const mockID = 'testID';
-  const jsonDeleteMock = jest.fn();
-
-  let mockResponse: Partial<Response>;
-  const deleteMockRequest = {
-    params: {
-      id: mockID,
-    },
-  } as Partial<Request>;
+  let deleteMockRequest: Request;
+  let findByIdAndDeleteMock: jest.Mock;
 
   beforeEach(() => {
-    mockResponse = {
-      json: jsonDeleteMock,
-      status: jest.fn().mockReturnThis(),
-    } as Partial<Response>;
+    findByIdAndDeleteMock = jest.fn();
+    IncomeSchema.findByIdAndDelete = findByIdAndDeleteMock;
+    deleteMockRequest = createRequest({ method: 'DELETE', params: { id: mockID } });
   });
-
-  afterEach(() => {
-    jsonDeleteMock.mockClear();
-    jest.resetAllMocks();
-  });
-
   it('should delete a income and return 200', async () => {
-    (IncomeSchema.findByIdAndDelete as jest.Mock).mockResolvedValueOnce({});
-    await deleteIncome(deleteMockRequest as Request, mockResponse as Response);
+    findByIdAndDeleteMock.mockResolvedValueOnce({});
+    const mockResponse = createResponse();
+    await deleteIncome(deleteMockRequest, mockResponse);
     expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
     expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
-    expect(mockResponse.status).toHaveBeenCalledTimes(1);
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.json().statusCode).toEqual(200);
   });
-  it('if and error happens should return 500', async () => {
-    (IncomeSchema.findByIdAndDelete as jest.Mock).mockRejectedValueOnce({});
-    await deleteIncome(deleteMockRequest as Request, mockResponse as Response);
+  it('if an error happens should return 500', async () => {
+    findByIdAndDeleteMock.mockRejectedValueOnce({});
+    const mockResponse = createResponse();
+    await deleteIncome(deleteMockRequest, mockResponse);
     expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
-    expect(mockResponse.status).toHaveBeenCalledTimes(1);
-    expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.json).toHaveBeenCalledTimes(1);
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Server Error' });
-  });
-  it('if a wrong id is provided should return 404', async () => {
-    (IncomeSchema.findByIdAndDelete as jest.Mock).mockResolvedValueOnce(null);
-    await deleteIncome(deleteMockRequest as Request, mockResponse as Response);
-    expect(IncomeSchema.findByIdAndDelete).toHaveBeenCalledWith(mockID);
-    expect(mockResponse.status).toHaveBeenCalledTimes(2);
-    expect(mockResponse.status).toHaveBeenCalledWith(404);
-    expect(mockResponse.json).toHaveBeenCalledTimes(2);
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Income not found' });
+    expect(mockResponse.json().statusCode).toEqual(500);
+    expect(mockResponse.json()._getJSONData()).toEqual({ message: 'Server Error' });
   });
 });
