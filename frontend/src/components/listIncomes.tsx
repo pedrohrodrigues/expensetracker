@@ -31,7 +31,7 @@ export const ListIncomesAppDashboard = () => {
       <div className="rounded-lg border-2 text-center border-box p-2 my-2">
         <h3 className="text-2xl">
           Total income:
-          <span className="text-green-400">
+          <span className="text-green-400" data-testid="total-incomes-amount">
             &nbsp;$
             {calculateTotalIncomesValue(
               expensesAppState.incomes.map((income) => income.amount),
@@ -43,7 +43,7 @@ export const ListIncomesAppDashboard = () => {
         <section className="w-full lg:w-2/6">
           <AddIncomesAppDashboard refreshList={handleRefreshList} />
         </section>
-        <section className="w-full lg:w-3/6">
+        <section data-testid="incomesWrapper" className="w-full lg:w-3/6">
           {expensesAppState.incomes.map((income, index) => {
             return (
               <div

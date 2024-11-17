@@ -80,21 +80,22 @@ describe('getIncome', () => {
   });
 
   it('should return all incomes', async () => {
+    const receivedIncomes = [
+      {
+        _id: '66fdb7f2e60d41e17ea339ce',
+        title: 'test',
+        amount: 2,
+        type: 'income',
+        date: '2022-10-10T03:00:00.000Z',
+        category: 'income',
+        description: 'test',
+        createdAt: '2024-10-02T21:15:30.922Z',
+        updatedAt: '2024-10-02T21:15:30.922Z',
+        __v: 0,
+      },
+    ];
     const mockQuery = {
-      sort: jest.fn().mockResolvedValue([
-        {
-          _id: '66fdb7f2e60d41e17ea339ce',
-          title: 'test',
-          amount: 2,
-          type: 'income',
-          date: '2022-10-10T03:00:00.000Z',
-          category: 'income',
-          description: 'test',
-          createdAt: '2024-10-02T21:15:30.922Z',
-          updatedAt: '2024-10-02T21:15:30.922Z',
-          __v: 0,
-        },
-      ]),
+      sort: jest.fn().mockResolvedValue(receivedIncomes),
     };
 
     findSchemaMock.mockReturnValue(mockQuery);
@@ -105,6 +106,7 @@ describe('getIncome', () => {
     expect(IncomeSchema.find).toHaveBeenCalled();
     expect(mockQuery.sort).toHaveBeenCalledWith({ createAt: -1 });
     expect(mockResponse.json().statusCode).toEqual(200);
+    expect(mockResponse._getJSONData()).toEqual(receivedIncomes);
   });
 
   it('should return 500 if there is an internal server error', async () => {
