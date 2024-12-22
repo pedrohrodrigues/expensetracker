@@ -22,3 +22,15 @@ export const getIncome = async (): Promise<getIncomeDto[] | null> => {
     return null;
   }
 };
+
+export const deleteIncome = async (
+  incomeId: string,
+): Promise<number | null> => {
+  try {
+    const result = await axios.delete(`${BASE_URL}delete-income/${incomeId}`);
+    return result.status;
+  } catch (error) {
+    console.log('Error deleting incomes:', error);
+    return null;
+  }
+};

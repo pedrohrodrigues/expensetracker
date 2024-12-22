@@ -7,6 +7,7 @@ export interface addIncomeDto {
 }
 
 export interface getIncomeDto {
+  _id: string;
   title: string;
   category: string;
   amount: number;

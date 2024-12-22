@@ -10,12 +10,15 @@ import {
 } from '@testing-library/react';
 import { getIncomeDto } from '../../types/dtoTypes';
 import { ExpensesAppProvider } from '../../context/context';
+import userEvent from '@testing-library/user-event';
+import { stat } from 'fs';
 jest.mock('axios');
 
 describe('List Incomes', () => {
   describe('When incomes are provided from the API', () => {
     const recievedIncomes: getIncomeDto[] = [
       {
+        _id: '123',
         title: 'Test Income 2',
         category: 'salary',
         amount: 120,
@@ -23,6 +26,7 @@ describe('List Incomes', () => {
         date: new Date('2022-01-01'),
       },
       {
+        _id: '456',
         title: 'Test Income 3',
         category: 'salary',
         amount: 140,
@@ -58,6 +62,35 @@ describe('List Incomes', () => {
         'total-incomes-amount',
       );
       expect(totalAmountElement).toHaveTextContent(/\$260/i);
+    });
+
+    describe('Delete Incomes', () => {
+      describe('When the delete income button is clicked', () => {
+        beforeEach(async () => {
+          axios.delete.mockResolvedValue({ status: 200 });
+          axios.get.mockResolvedValueOnce({
+            data: recievedIncomes.filter((income) => income._id !== '123'),
+          });
+          const deleteButton = await screen.getByTestId('delete-income-123');
+          await act(async () => {
+            userEvent.click(deleteButton);
+          });
+          await waitFor(() => {
+            expect(axios.delete).toHaveBeenCalledTimes(1);
+          });
+        });
+
+        it('should remove the income from the list', async () => {
+          const incomesReturnMessageElement = await screen.getByTestId(
+            'return-promise-message',
+          );
+          expect(incomesReturnMessageElement).toHaveTextContent(
+            /\Income deleted successfully/i,
+          );
+          const deletedIncome = await screen.queryByText(/Test Income 2/i);
+          expect(deletedIncome).not.toBeInTheDocument();
+        });
+      });
     });
   });
 });

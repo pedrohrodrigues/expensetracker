@@ -8,7 +8,7 @@ interface AddIncomesAppDashboardProps {
   refreshList: () => void;
 }
 
-interface onSubmitMessageProps {
+export interface onSubmitMessageProps {
   message: string;
   color: string;
 }
