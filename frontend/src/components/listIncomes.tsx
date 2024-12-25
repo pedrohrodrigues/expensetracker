@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useExpensesAppContext } from '../context/context';
-import { deleteIncome, getIncome } from '../apiRequests/apiRequests';
+import { deleteIncome, getIncome } from '../apiRequests/incomeRequests';
 import { IncomeActionTypes } from '../stateManagement/actions/incomeActions';
 import { calculateTotalIncomesValue } from '../helpers/incomeHelpers';
 import { AddIncomesAppDashboard, onSubmitMessageProps } from './addIncome';
@@ -32,7 +32,7 @@ export const ListIncomesAppDashboard = () => {
 
   const handleDeleteIncome = async (incomeId: string) => {
     const result = await deleteIncome(incomeId);
-    if (result === 200) {
+    if (result == 200) {
       setPromiseMessage({
         message: 'Income deleted successfully',
         color: 'green',
@@ -40,7 +40,7 @@ export const ListIncomesAppDashboard = () => {
       setRefreshList(!refeshList);
     } else {
       setPromiseMessage({
-        message: 'Error trying to delete income please try again',
+        message: 'Error trying to delete income, please try again',
         color: 'red',
       });
     }

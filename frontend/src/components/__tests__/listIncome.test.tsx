@@ -91,6 +91,30 @@ describe('List Incomes', () => {
           expect(deletedIncome).not.toBeInTheDocument();
         });
       });
+
+      describe('When the delete income button is clicked but there is an error with the request', () => {
+        beforeEach(async () => {
+          axios.delete.mockResolvedValue({ status: 404 });
+          const deleteButton = await screen.getByTestId('delete-income-123');
+          await act(async () => {
+            userEvent.click(deleteButton);
+          });
+          await waitFor(() => {
+            expect(axios.delete).toHaveBeenCalledTimes(1);
+          });
+        });
+        it('should show an error message an keep the income in the list', async () => {
+          const incomesReturnMessageElement = await screen.getByTestId(
+            'return-promise-message',
+          );
+          expect(incomesReturnMessageElement).toHaveTextContent(
+            'Error trying to delete income, please try again',
+          );
+          const deletedIncome = await screen.queryByText(/Test Income 2/i);
+          expect(deletedIncome).toBeInTheDocument();
+          ('');
+        });
+      });
     });
   });
 });

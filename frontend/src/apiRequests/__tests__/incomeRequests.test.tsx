@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { addIncomeDto } from '../../types/dtoTypes';
-import { addIncome, deleteIncome, getIncome } from '../apiRequests';
-import { BASE_URL } from '../apiRequests';
+import { addIncome, deleteIncome, getIncome } from '../incomeRequests';
+import { BASE_URL } from '../incomeRequests';
 
 jest.mock('axios');
 
@@ -40,36 +40,36 @@ describe('addIncome function', () => {
       'Test error',
     );
   });
+});
 
-  describe('getIncome', () => {
-    it('should return income data on successful GET request', async () => {
-      const mockResponse = {
-        data: [
-          { id: 1, amount: 100 },
-          { id: 2, amount: 200 },
-        ],
-      };
-      axios.get.mockResolvedValue(mockResponse);
-      const result = await getIncome();
-      expect(result).toEqual(mockResponse.data);
-    });
-    it('should return null on failed GET request', async () => {
-      const mockError = new Error('Failed to fetch income data');
-      axios.get.mockRejectedValue(mockError);
-      const result = await getIncome();
-      expect(result).toBeNull();
-    });
-    it('should log error to console on failed GET request', async () => {
-      const mockError = new Error('Failed to fetch income data');
-      axios.get.mockRejectedValue(mockError);
-      console.log = jest.fn();
-      await getIncome();
-      expect(console.log).toHaveBeenCalledTimes(1);
-      expect(console.log).toHaveBeenCalledWith(
-        'Error getting incomes:',
-        mockError,
-      );
-    });
+describe('getIncome', () => {
+  it('should return income data on successful GET request', async () => {
+    const mockResponse = {
+      data: [
+        { id: 1, amount: 100 },
+        { id: 2, amount: 200 },
+      ],
+    };
+    axios.get.mockResolvedValue(mockResponse);
+    const result = await getIncome();
+    expect(result).toEqual(mockResponse.data);
+  });
+  it('should return null on failed GET request', async () => {
+    const mockError = new Error('Failed to fetch income data');
+    axios.get.mockRejectedValue(mockError);
+    const result = await getIncome();
+    expect(result).toBeNull();
+  });
+  it('should log error to console on failed GET request', async () => {
+    const mockError = new Error('Failed to fetch income data');
+    axios.get.mockRejectedValue(mockError);
+    console.log = jest.fn();
+    await getIncome();
+    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.log).toHaveBeenCalledWith(
+      'Error getting incomes:',
+      mockError,
+    );
   });
 });
 

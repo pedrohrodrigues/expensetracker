@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 import { addIncomeDto } from '../../types/dtoTypes';
 import { AddIncomesAppDashboard } from '../addIncome';
-import { BASE_URL } from '../../apiRequests/apiRequests';
+import { BASE_URL } from '../../apiRequests/incomeRequests';
 const refreshListMock = jest.fn();
 jest.mock('axios');
 

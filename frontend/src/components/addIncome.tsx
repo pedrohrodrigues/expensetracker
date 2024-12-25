@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { addIncomeDto } from '../types/dtoTypes';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addIncome } from '../apiRequests/apiRequests';
+import { addIncome } from '../apiRequests/incomeRequests';
 
 interface AddIncomesAppDashboardProps {
   refreshList: () => void;

@@ -1,10 +1,14 @@
 import React, { createContext, useReducer } from 'react';
-import { getIncomeDto } from '../types/dtoTypes';
+import { getExpenseDto, getIncomeDto } from '../types/dtoTypes';
 import {
   IncomeAction,
   IncomeActionTypes,
 } from '../stateManagement/actions/incomeActions';
 import { getIncomeReducer } from '../stateManagement/reducers/getIncomeReducer';
+import {
+  ExpenseAction,
+  ExpensesActionTypes,
+} from '../stateManagement/actions/expensesActions';
 
 interface ExpensesAppProviderProps {
   children: React.ReactNode;
@@ -13,23 +17,33 @@ interface ExpensesAppContextType {
   expensesAppState: ExpensesAppStateType;
   expensesAppDispatch: React.Dispatch<IncomeAction>;
 }
+
+type ExpensesAppContextActionType = IncomeAction | ExpenseAction;
+
 const ExpensesAppContext = createContext<ExpensesAppContextType | undefined>(
   undefined,
 );
 
 export interface ExpensesAppStateType {
   incomes: getIncomeDto[];
+  expenses: getExpenseDto[];
 }
 
 export const ExpensesAppProvider = ({ children }: ExpensesAppProviderProps) => {
   const initialState = {
     incomes: [],
+    expenses: [],
   };
 
-  function reducer(state: ExpensesAppStateType, action: IncomeAction) {
+  function reducer(
+    state: ExpensesAppStateType,
+    action: ExpensesAppContextActionType,
+  ) {
     switch (action.type) {
       case IncomeActionTypes.GetIncome:
         return getIncomeReducer(state, action);
+      case ExpensesActionTypes.ListExpenses:
+        return state;
       default:
         return state;
     }
