@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { ExpensesAppHeader } from './components/header';
 import { ExpensesAppLeftSidebar } from './components/leftSidebar';
 import { DashboardAppDashboard } from './components/dashboard';
-import { ListIncomesAppDashboard } from './components/listIncomes';
+import { IncomesAppDashboard } from './components/incomes';
 import { TransactionsAppDashboard } from './components/transactions';
-import { ExpensesAppDashboard } from './components/expenses';
+import { ListExpensesAppDashboard } from './components/expenses';
 
 function App() {
   const [activePath, setActivePath] = useState(0);
@@ -15,9 +15,9 @@ function App() {
       case 1:
         return <TransactionsAppDashboard />;
       case 2:
-        return <ListIncomesAppDashboard />;
+        return <IncomesAppDashboard />;
       case 3:
-        return <ExpensesAppDashboard />;
+        return <ListExpensesAppDashboard />;
       default:
         return <DashboardAppDashboard />;
     }

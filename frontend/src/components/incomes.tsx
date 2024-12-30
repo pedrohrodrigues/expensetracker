@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useExpensesAppContext } from '../context/context';
 import { deleteIncome, getIncome } from '../apiRequests/incomeRequests';
 import { IncomeActionTypes } from '../stateManagement/actions/incomeActions';
-import { calculateTotalIncomesValue } from '../helpers/incomeHelpers';
+import { calculateTotalValue } from '../helpers/incomeHelpers';
 import { AddIncomesAppDashboard, onSubmitMessageProps } from './addIncome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-export const ListIncomesAppDashboard = () => {
+export const IncomesAppDashboard = () => {
   const [refeshList, setRefreshList] = useState(false);
   const [promiseMessage, setPromiseMessage] = useState<onSubmitMessageProps>({
     message: '',
@@ -57,7 +57,7 @@ export const ListIncomesAppDashboard = () => {
           Total income:
           <span className="text-green-400" data-testid="total-incomes-amount">
             &nbsp;$
-            {calculateTotalIncomesValue(
+            {calculateTotalValue(
               expensesAppState.incomes.map((income) => income.amount),
             )}
           </span>

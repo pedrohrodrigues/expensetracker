@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getExpense } from '../expensesRequests';
+import { getExpense } from '../expenseRequests';
 
 jest.mock('axios');
 

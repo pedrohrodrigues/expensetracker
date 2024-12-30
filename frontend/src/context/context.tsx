@@ -7,15 +7,16 @@ import {
 import { getIncomeReducer } from '../stateManagement/reducers/getIncomeReducer';
 import {
   ExpenseAction,
-  ExpensesActionTypes,
-} from '../stateManagement/actions/expensesActions';
+  ExpenseActionTypes,
+} from '../stateManagement/actions/expenseActions';
+import { getExpenseReducer } from '../stateManagement/reducers/getExpenseReducer';
 
 interface ExpensesAppProviderProps {
   children: React.ReactNode;
 }
 interface ExpensesAppContextType {
   expensesAppState: ExpensesAppStateType;
-  expensesAppDispatch: React.Dispatch<IncomeAction>;
+  expensesAppDispatch: React.Dispatch<ExpensesAppContextActionType>;
 }
 
 type ExpensesAppContextActionType = IncomeAction | ExpenseAction;
@@ -42,8 +43,8 @@ export const ExpensesAppProvider = ({ children }: ExpensesAppProviderProps) => {
     switch (action.type) {
       case IncomeActionTypes.GetIncome:
         return getIncomeReducer(state, action);
-      case ExpensesActionTypes.ListExpenses:
-        return state;
+      case ExpenseActionTypes.GetExpense:
+        return getExpenseReducer(state, action);
       default:
         return state;
     }

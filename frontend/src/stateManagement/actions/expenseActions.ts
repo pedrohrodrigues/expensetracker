@@ -1,21 +1,21 @@
 import { getExpenseDto } from '../../types/dtoTypes';
 
-export enum ExpensesActionTypes {
-  ListExpenses = 'LIST_EXPENSES',
+export enum ExpenseActionTypes {
+  GetExpense = 'GET_EXPENSE',
 }
 
 export type ExpenseAction = getExpenseAction;
 
 export interface getExpenseAction {
-  type: ExpensesActionTypes.ListExpenses;
+  type: ExpenseActionTypes.GetExpense;
   payload: getExpenseDto[];
 }
 
-export const listExpensesAction = (
+export const listExpenseAction = (
   expenses: getExpenseDto[],
 ): getExpenseAction => {
   return {
-    type: ExpensesActionTypes.ListExpenses,
+    type: ExpenseActionTypes.GetExpense,
     payload: expenses,
   };
 };

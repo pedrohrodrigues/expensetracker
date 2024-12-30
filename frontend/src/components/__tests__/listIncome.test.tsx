@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { ListIncomesAppDashboard } from '../listIncomes';
+import { IncomesAppDashboard } from '../incomes';
 import {
   act,
   render,
@@ -11,7 +11,6 @@ import {
 import { getIncomeDto } from '../../types/dtoTypes';
 import { ExpensesAppProvider } from '../../context/context';
 import userEvent from '@testing-library/user-event';
-import { stat } from 'fs';
 jest.mock('axios');
 
 describe('List Incomes', () => {
@@ -40,7 +39,7 @@ describe('List Incomes', () => {
       await act(async () => {
         render(
           <ExpensesAppProvider>
-            <ListIncomesAppDashboard />
+            <IncomesAppDashboard />
           </ExpensesAppProvider>,
         );
       });

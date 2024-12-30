@@ -1,9 +1,9 @@
-export const calculateTotalIncomesValue = (incomesValue: number[]): number => {
-  if (!incomesValue) {
+export const calculateTotalValue = (receivedValue: number[]): number => {
+  if (!receivedValue) {
     return 0;
   }
 
-  return incomesValue.reduce((accumulator, item) => {
+  return receivedValue.reduce((accumulator, item) => {
     return accumulator + item;
   }, 0);
 };
