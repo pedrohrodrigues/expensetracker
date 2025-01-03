@@ -7,7 +7,6 @@ import {
   getByTestId,
 } from '@testing-library/react';
 import axios from 'axios';
-import { addIncomeDto } from '../../types/dtoTypes';
 import { AddIncomesAppDashboard } from '../addIncome';
 import { BASE_URL } from '../../apiRequests/incomeRequests';
 const refreshListMock = jest.fn();

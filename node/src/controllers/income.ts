@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import IncomeSchema from '../models/incomeModel';
-export interface addIncomeDto {
+export interface addIncomeOrExpenseDto {
   title: string;
   category: string;
   amount: number;
@@ -8,7 +8,7 @@ export interface addIncomeDto {
   date: Date;
 }
 
-export const addIncome = async (req: Request<addIncomeDto>, res: Response) => {
+export const addIncome = async (req: Request<addIncomeOrExpenseDto>, res: Response) => {
   const { title, amount, description, date, category } = req.body;
 
   if (!title || !amount || !description || !date || !category) {

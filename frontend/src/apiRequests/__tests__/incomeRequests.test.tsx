@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { addIncomeDto } from '../../types/dtoTypes';
+import { addIncomeOrExpenseDto } from '../../types/dtoTypes';
 import { addIncome, deleteIncome, getIncome } from '../incomeRequests';
 import { BASE_URL } from '../incomeRequests';
 
@@ -24,7 +24,7 @@ describe('addIncome function', () => {
     expect(result).toBe(200);
   });
   it('should catch and log error when POST request fails', async () => {
-    const incomeData: addIncomeDto = {
+    const incomeData: addIncomeOrExpenseDto = {
       title: 'Test Income',
       amount: 100,
       description: 'Test income description',

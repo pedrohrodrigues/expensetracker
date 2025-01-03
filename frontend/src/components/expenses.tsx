@@ -1,11 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getExpense } from '../apiRequests/expenseRequests';
 import { useExpensesAppContext } from '../context/context';
 import { ExpenseActionTypes } from '../stateManagement/actions/expenseActions';
 import { calculateTotalValue } from '../helpers/incomeHelpers';
+import { AddExpensesAppDashboard } from './addExpense';
 
 export const ListExpensesAppDashboard = () => {
   const { expensesAppState, expensesAppDispatch } = useExpensesAppContext();
+  const [refeshList, setRefreshList] = useState(false);
+
+  const handleRefreshList = () => {
+    setRefreshList(!refeshList);
+  };
 
   const fetchExpenses = async () => {
     const expenses = await getExpense();
@@ -18,7 +24,7 @@ export const ListExpensesAppDashboard = () => {
   };
   useEffect(() => {
     fetchExpenses();
-  }, []);
+  }, [refeshList]);
   return (
     <div className="w-3/4 bg-slate-50 h-full box-border p-4 rounded-lg border-2">
       <h2 className="text-2xl font-bold">Expenses</h2>
@@ -34,21 +40,25 @@ export const ListExpensesAppDashboard = () => {
           </span>
         </h3>
       </div>
-
-      <section data-testid="expensesWrapper" className="w-full lg:w-3/6">
-        {expensesAppState.expenses.map((expense, index) => {
-          return (
-            <div
-              key={index}
-              className="rounded-lg border-2 border-box p-2 mb-2"
-            >
-              <div className="flex justify-between">{expense.title}</div>
-              <p>Category: {expense.category}</p>
-              <span>${expense.amount}</span>
-            </div>
-          );
-        })}
-      </section>
+      <div className="flex justify-between w-full flex-wrap">
+        <section className="w-full lg:w-2/6">
+          <AddExpensesAppDashboard refreshList={handleRefreshList} />
+        </section>
+        <section data-testid="expensesWrapper" className="w-full lg:w-3/6">
+          {expensesAppState.expenses.map((expense, index) => {
+            return (
+              <div
+                key={index}
+                className="rounded-lg border-2 border-box p-2 mb-2"
+              >
+                <div className="flex justify-between">{expense.title}</div>
+                <p>Category: {expense.category}</p>
+                <span>${expense.amount}</span>
+              </div>
+            );
+          })}
+        </section>
+      </div>
     </div>
   );
 };

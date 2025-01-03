@@ -1,12 +1,12 @@
 import { Request } from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { addIncome, addIncomeDto, deleteIncome, getIncome } from '../income';
+import { addIncome, addIncomeOrExpenseDto, deleteIncome, getIncome } from '../income';
 import IncomeSchema from '../../models/incomeModel';
 
 jest.mock('../../models/incomeModel');
 
 describe('addIncome', () => {
-  type AddIncomeRequest = Request & { body: addIncomeDto; params: addIncomeDto };
+  type AddIncomeRequest = Request & { body: addIncomeOrExpenseDto; params: addIncomeOrExpenseDto };
 
   const mockRequest = createRequest<AddIncomeRequest>({ method: 'POST' });
   let createSchemaMock: jest.Mock;

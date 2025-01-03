@@ -1,4 +1,4 @@
-export interface addIncomeDto {
+export interface addIncomeOrExpenseDto {
   title: string;
   category: string;
   amount: number;

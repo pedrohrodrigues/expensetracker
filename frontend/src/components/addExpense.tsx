@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { addIncomeOrExpenseDto } from '../types/dtoTypes';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addIncome } from '../apiRequests/incomeRequests';
+import { addExpense } from '../apiRequests/expenseRequests';
 
-interface AddIncomesAppDashboardProps {
+interface AddExpensesAppDashboardProps {
   refreshList: () => void;
 }
 
@@ -13,10 +13,10 @@ export interface onSubmitMessageProps {
   color: string;
 }
 
-export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
-  refreshList,
-}) => {
-  const defaultIncomeValues: addIncomeOrExpenseDto = {
+export const AddExpensesAppDashboard: React.FC<
+  AddExpensesAppDashboardProps
+> = ({ refreshList }) => {
+  const defaultExpenseValues: addIncomeOrExpenseDto = {
     title: '',
     category: '',
     amount: 0,
@@ -24,14 +24,14 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
     date: new Date(),
   };
 
-  const [inputIncomeState, setInputIncomeState] =
-    useState<addIncomeOrExpenseDto>(defaultIncomeValues);
+  const [inputExpenseState, setInputExpenseState] =
+    useState<addIncomeOrExpenseDto>(defaultExpenseValues);
   const [onSubmitMessage, setOnSubmitMessage] = useState<onSubmitMessageProps>({
     message: '',
     color: '',
   });
 
-  const { title, category, amount, description, date } = inputIncomeState;
+  const { title, category, amount, description, date } = inputExpenseState;
   const handleInput =
     (name: keyof addIncomeOrExpenseDto) =>
     (
@@ -39,7 +39,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
     ) => {
-      setInputIncomeState({ ...inputIncomeState, [name]: e.target.value });
+      setInputExpenseState({ ...inputExpenseState, [name]: e.target.value });
     };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,15 +51,15 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
       });
       return;
     }
-    const result = await addIncome(inputIncomeState);
+    const result = await addExpense(inputExpenseState);
     if (result === 200) {
       setOnSubmitMessage({
-        message: 'Income added successfully',
+        message: 'Expense added successfully',
         color: 'green',
       });
     } else {
       setOnSubmitMessage({
-        message: 'Error trying to add income please try again',
+        message: 'Error trying to add expense please try again',
         color: 'red',
       });
     }
@@ -69,9 +69,9 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
 
   const handleDateChange = (date: Date | null) => {
     if (date === null) {
-      setInputIncomeState({ ...inputIncomeState, date: new Date() });
+      setInputExpenseState({ ...inputExpenseState, date: new Date() });
     } else {
-      setInputIncomeState({ ...inputIncomeState, date: date });
+      setInputExpenseState({ ...inputExpenseState, date: date });
     }
   };
   const CustomDateInput = React.forwardRef<HTMLInputElement>((props, ref) => (
@@ -82,16 +82,17 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
 
   return (
     <div className="w-3/4 h-full box-border p-4 rounded-lg border-2">
-      <h3 className="text-1xl font-bold pb-2">Add Income</h3>
+      <h3 className="text-1xl font-bold pb-2">Add Expense</h3>
       <div>
-        <form onSubmit={handleSubmit} data-testid="add-income-form">
+        <form onSubmit={handleSubmit} data-testid="add-expense-form">
           <div className="pb-2">
             <input
               data-testId={'title'}
               type="text"
               value={title}
               name={'title'}
-              placeholder="Income Title"
+              title="Expense Title"
+              placeholder="Expense Title"
               onChange={handleInput('title')}
               className="w-full"
             />
@@ -101,15 +102,16 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
               data-testId={'category'}
               value={category}
               name="category"
+              title="Category"
               className="w-full"
               onChange={handleInput('category')}
             >
               <option value="" disabled>
                 Select Category
               </option>
-              <option value="salary">Salary</option>
-              <option value="freelancing">Freelancing</option>
-              <option value="investiments">Investiments</option>
+              <option value="rent">Rent</option>
+              <option value="grocery">Grocery</option>
+              <option value="games">Games</option>
               <option value="gift">Gift</option>
               <option value="other">Other</option>
             </select>
@@ -119,6 +121,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
               data-testId={'amount'}
               type="number"
               value={amount}
+              title="Number"
               name={'amount'}
               placeholder="Amount"
               onChange={handleInput('amount')}
@@ -130,6 +133,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
               data-testId={'description'}
               value={description}
               name={'description'}
+              title="Description"
               placeholder="Description"
               onChange={handleInput('description')}
               className="w-full"
@@ -141,6 +145,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
               name={'date'}
               customInput={<CustomDateInput />}
               id="date"
+              title="Date"
               placeholderText="Enter a date"
               selected={date}
               dateFormat="dd/MM/yyyy"
@@ -154,7 +159,7 @@ export const AddIncomesAppDashboard: React.FC<AddIncomesAppDashboardProps> = ({
               data-testId={'submit'}
               className="bg-green-400 rounded p-2"
             >
-              Add Income
+              Add Expense
             </button>
           </div>
           {onSubmitMessage.message.length > 0 && (

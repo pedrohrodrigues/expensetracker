@@ -1,9 +1,9 @@
-import { addIncomeDto, getIncomeDto } from '../types/dtoTypes';
+import { addIncomeOrExpenseDto, getIncomeDto } from '../types/dtoTypes';
 import axios from 'axios';
 export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const addIncome = async (
-  income: addIncomeDto,
+  income: addIncomeOrExpenseDto,
 ): Promise<number | undefined> => {
   try {
     const result = await axios.post(`${BASE_URL}add-income`, income);
