@@ -34,7 +34,7 @@ export const IncomesAppDashboard = () => {
     const result = await deleteIncome(incomeId);
     if (result == 200) {
       setPromiseMessage({
-        message: 'Income deleted successfully',
+        message: 'Income successfully deleted',
         color: 'green',
       });
       setRefreshList(!refeshList);

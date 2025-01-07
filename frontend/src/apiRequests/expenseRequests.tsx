@@ -22,3 +22,15 @@ export const addExpense = async (
     console.log('Error adding expenses:', error);
   }
 };
+
+export const deleteExpense = async (
+  expenseId: string,
+): Promise<number | null> => {
+  try {
+    const result = await axios.delete(`${BASE_URL}delete-expense/${expenseId}`);
+    return result.status;
+  } catch (error) {
+    console.log('Error deleting expenses:', error);
+    return null;
+  }
+};

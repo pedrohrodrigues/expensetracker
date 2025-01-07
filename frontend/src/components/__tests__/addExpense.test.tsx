@@ -45,4 +45,72 @@ describe('addExpense', () => {
       });
     });
   });
+
+  describe('AddExpensesAppDashboardProps input validations', () => {
+    const getInputFormFieldValue = (fieldName: string): string | number => {
+      switch (fieldName) {
+        case 'title':
+          return 'input title';
+        case 'category':
+          return 'rent';
+        case 'amount':
+          return '100';
+        case 'description':
+          return 'description';
+        default:
+          return '';
+      }
+    };
+    async function expectErrorMessage() {
+      const submitMessage = await screen.findByTestId('submit-message');
+      expect(submitMessage).toHaveTextContent(
+        'Please fill all required fields',
+      );
+    }
+
+    it('should return an error message if a field the form is empty', async () => {
+      const form = await screen.findByTestId('add-expense-form');
+      expect(form).toBeInTheDocument();
+      fireEvent.submit(form);
+      const submitMessage = await screen.findByTestId('submit-message');
+      expect(submitMessage).toHaveTextContent(
+        'Please fill all required fields',
+      );
+    });
+
+    // Date doesn't need to be tested since it always has a default value
+
+    const fields = [
+      {
+        name: 'title',
+      },
+      {
+        name: 'category',
+      },
+      {
+        name: 'amount',
+      },
+      {
+        name: 'description',
+      },
+    ];
+
+    it.each(fields)(
+      'displays an error message if the %s field is empty',
+      async (field) => {
+        const form = await screen.findByTestId('add-expense-form');
+
+        fields
+          .filter((f) => f.name !== field.name)
+          .forEach((f) =>
+            fireEvent.change(screen.getByTestId(f.name), {
+              target: { value: getInputFormFieldValue(f.name) },
+            }),
+          );
+
+        fireEvent.submit(form);
+        await expectErrorMessage();
+      },
+    );
+  });
 });

@@ -1,16 +1,43 @@
 import { useEffect, useState } from 'react';
-import { getExpense } from '../apiRequests/expenseRequests';
+import { deleteExpense, getExpense } from '../apiRequests/expenseRequests';
 import { useExpensesAppContext } from '../context/context';
 import { ExpenseActionTypes } from '../stateManagement/actions/expenseActions';
 import { calculateTotalValue } from '../helpers/incomeHelpers';
 import { AddExpensesAppDashboard } from './addExpense';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
+interface onSubmitMessageProps {
+  message: string;
+  color: string;
+}
 
 export const ListExpensesAppDashboard = () => {
   const { expensesAppState, expensesAppDispatch } = useExpensesAppContext();
   const [refeshList, setRefreshList] = useState(false);
+  const [promiseMessage, setPromiseMessage] = useState<onSubmitMessageProps>({
+    message: '',
+    color: '',
+  });
 
   const handleRefreshList = () => {
     setRefreshList(!refeshList);
+  };
+
+  const handleDeleteExpense = async (expenseId: string) => {
+    const result = await deleteExpense(expenseId);
+    if (result == 200) {
+      setPromiseMessage({
+        message: 'Expense successfully deleted',
+        color: 'green',
+      });
+      setRefreshList(!refeshList);
+    } else {
+      setPromiseMessage({
+        message: 'Error trying to delete expense, please try again',
+        color: 'red',
+      });
+    }
   };
 
   const fetchExpenses = async () => {
@@ -45,13 +72,31 @@ export const ListExpensesAppDashboard = () => {
           <AddExpensesAppDashboard refreshList={handleRefreshList} />
         </section>
         <section data-testid="expensesWrapper" className="w-full lg:w-3/6">
+          {promiseMessage.message.length > 0 && (
+            <div
+              className="w-full mb-2"
+              data-testid="return-promise-message"
+              style={{ color: promiseMessage.color }}
+            >
+              {promiseMessage.message}
+            </div>
+          )}
           {expensesAppState.expenses.map((expense, index) => {
             return (
               <div
                 key={index}
                 className="rounded-lg border-2 border-box p-2 mb-2"
               >
-                <div className="flex justify-between">{expense.title}</div>
+                <div className="flex justify-between">
+                  {expense.title}
+                  <FontAwesomeIcon
+                    className="cursor-pointer"
+                    data-testid={`delete-expense-${expense._id}`}
+                    icon={faTrash}
+                    onClick={() => handleDeleteExpense(expense._id)}
+                  />
+                </div>
+
                 <p>Category: {expense.category}</p>
                 <span>${expense.amount}</span>
               </div>

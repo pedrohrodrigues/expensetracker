@@ -84,7 +84,7 @@ describe('List Incomes', () => {
             'return-promise-message',
           );
           expect(incomesReturnMessageElement).toHaveTextContent(
-            /\Income deleted successfully/i,
+            /\Income successfully deleted/i,
           );
           const deletedIncome = await screen.queryByText(/Test Income 2/i);
           expect(deletedIncome).not.toBeInTheDocument();
