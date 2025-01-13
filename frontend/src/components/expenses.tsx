@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { deleteExpense, getExpense } from '../apiRequests/expenseRequests';
+import { deleteExpense } from '../apiRequests/expenseRequests';
 import { useExpensesAppContext } from '../context/context';
-import { ExpenseActionTypes } from '../stateManagement/actions/expenseActions';
-import { calculateTotalValue } from '../helpers/incomeHelpers';
+import { calculateTotalValue } from '../helpers/generalHelpers';
 import { AddExpensesAppDashboard } from './addExpense';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useFetchExpense } from '../hooks/useFetchExpense';
 
 interface onSubmitMessageProps {
   message: string;
@@ -13,13 +13,13 @@ interface onSubmitMessageProps {
 }
 
 export const ListExpensesAppDashboard = () => {
-  const { expensesAppState, expensesAppDispatch } = useExpensesAppContext();
+  const { expensesAppState } = useExpensesAppContext();
   const [refeshList, setRefreshList] = useState(false);
   const [promiseMessage, setPromiseMessage] = useState<onSubmitMessageProps>({
     message: '',
     color: '',
   });
-
+  const fetchExpense = useFetchExpense();
   const handleRefreshList = () => {
     setRefreshList(!refeshList);
   };
@@ -40,18 +40,9 @@ export const ListExpensesAppDashboard = () => {
     }
   };
 
-  const fetchExpenses = async () => {
-    const expenses = await getExpense();
-    if (expenses !== null) {
-      expensesAppDispatch({
-        type: ExpenseActionTypes.GetExpense,
-        payload: expenses,
-      });
-    }
-  };
   useEffect(() => {
-    fetchExpenses();
-  }, [refeshList]);
+    fetchExpense();
+  }, [fetchExpense, refeshList]);
   return (
     <div className="w-3/4 bg-slate-50 h-full box-border p-4 rounded-lg border-2">
       <h2 className="text-2xl font-bold">Expenses</h2>

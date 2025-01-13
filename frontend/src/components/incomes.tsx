@@ -1,43 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useExpensesAppContext } from '../context/context';
-import { deleteIncome, getIncome } from '../apiRequests/incomeRequests';
-import { IncomeActionTypes } from '../stateManagement/actions/incomeActions';
-import { calculateTotalValue } from '../helpers/incomeHelpers';
+import { deleteIncome } from '../apiRequests/incomeRequests';
+import { calculateTotalValue } from '../helpers/generalHelpers';
 import { AddIncomesAppDashboard, onSubmitMessageProps } from './addIncome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useFetchIncome } from '../hooks/useFetchIncome';
 
 export const IncomesAppDashboard = () => {
-  const [refeshList, setRefreshList] = useState(false);
+  const [refreshList, setRefreshList] = useState(false);
   const [promiseMessage, setPromiseMessage] = useState<onSubmitMessageProps>({
     message: '',
     color: '',
   });
 
-  const { expensesAppState, expensesAppDispatch } = useExpensesAppContext();
+  const { expensesAppState } = useExpensesAppContext();
+  const fetchIncome = useFetchIncome();
 
   const handleRefreshList = () => {
-    setRefreshList(!refeshList);
-  };
-
-  const fetchIncome = async () => {
-    const incomes = await getIncome();
-    if (incomes !== null) {
-      expensesAppDispatch({
-        type: IncomeActionTypes.GetIncome,
-        payload: incomes,
-      });
-    }
+    setRefreshList(!refreshList);
   };
 
   const handleDeleteIncome = async (incomeId: string) => {
     const result = await deleteIncome(incomeId);
-    if (result == 200) {
+    if (result === 200) {
       setPromiseMessage({
         message: 'Income successfully deleted',
         color: 'green',
       });
-      setRefreshList(!refeshList);
+      setRefreshList(!refreshList);
     } else {
       setPromiseMessage({
         message: 'Error trying to delete income, please try again',
@@ -48,9 +39,10 @@ export const IncomesAppDashboard = () => {
 
   useEffect(() => {
     fetchIncome();
-  }, [refeshList]);
+  }, [fetchIncome, refreshList]);
+
   return (
-    <div className="w-3/4 bg-slate-50 h-full box-border p-4 rounded-lg border-2 ">
+    <div className="w-3/4 bg-slate-50 h-full box-border p-4 rounded-lg border-2">
       <h2 className="text-2xl font-bold">Incomes</h2>
       <div className="rounded-lg border-2 text-center border-box p-2 my-2">
         <h3 className="text-2xl">

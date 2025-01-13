@@ -1,4 +1,4 @@
-import { calculateTotalValue } from '../incomeHelpers';
+import { calculateTotalValue } from '../generalHelpers';
 
 describe('calculateTotalValue', () => {
   it('should return 0 when incomesValue is empty', () => {
