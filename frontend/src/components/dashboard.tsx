@@ -18,9 +18,17 @@ export const DashboardAppDashboard = () => {
     );
 
     if (totalIncome > totalExpense) {
-      return totalIncome - totalExpense;
+      return (
+        <span className="text-green-400" data-testid="total-balance-amount">
+          &nbsp;${totalIncome - totalExpense}
+        </span>
+      );
     }
-    return totalExpense - totalIncome;
+    return (
+      <span className="text-red-400" data-testid="total-balance-amount">
+        &nbsp;-${totalExpense - totalIncome}
+      </span>
+    );
   };
 
   useEffect(() => {
@@ -34,10 +42,7 @@ export const DashboardAppDashboard = () => {
       <div className="rounded-lg border-2 text-center border-box p-2 my-2">
         <h3 className="text-2xl">
           Total Balance:
-          <span className="text-green-400" data-testid="total-balance-amount">
-            &nbsp;$
-            {getTotalBalance()}
-          </span>
+          {getTotalBalance()}
         </h3>
       </div>
     </div>

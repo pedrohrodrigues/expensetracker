@@ -8,6 +8,14 @@ export interface addIncomeOrExpenseDto {
   date: Date;
 }
 
+export interface getIncomeParameters {
+  title?: string;
+  category?: string;
+  amount?: number;
+  description?: string;
+  date?: Date;
+}
+
 export const addIncome = async (req: Request<addIncomeOrExpenseDto>, res: Response) => {
   const { title, amount, description, date, category } = req.body;
 
