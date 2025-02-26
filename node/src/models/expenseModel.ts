@@ -25,12 +25,12 @@ const ExpenseSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      maxLength: 20,
+      maxLength: 50,
     },
     description: {
       type: String,
       required: true,
-      maxLength: 20,
+      maxLength: 220,
       trim: true,
     },
   },

@@ -25,16 +25,16 @@ const IncomeSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      maxLength: 20,
+      maxLength: 50,
     },
     description: {
       type: String,
       required: true,
-      maxLength: 20,
+      maxLength: 220,
       trim: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model('Income', IncomeSchema);
