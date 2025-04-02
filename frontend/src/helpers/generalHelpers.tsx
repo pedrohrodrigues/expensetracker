@@ -12,15 +12,13 @@ export const calculateTotalValue = (receivedValue: number[]): number => {
 
 export const getIncomeFilteredByMonthOfOfAYear = (
   incomes: getIncomeDto[],
-  currentYear: Date,
+  givenYear: Date,
 ) => {
-  const oneYearBefore = currentYear.getFullYear() - 1;
+  const oneYearBefore = new Date(givenYear);
+  oneYearBefore.setFullYear(oneYearBefore.getFullYear() - 1);
   const incomesOfTheLastYear = incomes.filter((income) => {
     const incomeDate = new Date(income.date);
-    return (
-      incomeDate.getFullYear() >= oneYearBefore &&
-      incomeDate.getFullYear() <= currentYear.getFullYear()
-    );
+    return incomeDate >= oneYearBefore && incomeDate <= givenYear;
   });
 
   const incomesFilteredByMonth = incomesOfTheLastYear.reduce(

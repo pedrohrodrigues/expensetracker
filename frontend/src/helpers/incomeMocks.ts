@@ -65,3 +65,22 @@ export const incomeWithDifferentDates = [
     date: new Date(2023, 11, 16),
   },
 ];
+
+export const incomesOf2027 = [
+  {
+    _id: '1',
+    title: 'Test Income',
+    category: 'salary',
+    amount: 100,
+    description: 'Test Description',
+    date: new Date(2027, 1, 1),
+  },
+  {
+    _id: '2',
+    title: 'Next year income',
+    category: 'salary',
+    amount: 102,
+    description: 'Income Description',
+    date: new Date(2027, 11, 12),
+  },
+];

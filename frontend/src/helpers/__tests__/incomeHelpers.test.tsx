@@ -2,7 +2,7 @@ import {
   calculateTotalValue,
   getIncomeFilteredByMonthOfOfAYear,
 } from '../generalHelpers';
-import { incomeWithDifferentDates } from '../incomeMocks';
+import { incomesOf2027, incomeWithDifferentDates } from '../incomeMocks';
 
 describe('calculateTotalValue', () => {
   it('should return 0 when incomesValue is empty', () => {
@@ -19,6 +19,28 @@ describe('calculateTotalValue', () => {
 });
 
 describe('getIncomeFilteredByMonthOfOfAYear', () => {
+  describe('When incomes of a year ahead are provided', () => {
+    const result = getIncomeFilteredByMonthOfOfAYear(
+      incomesOf2027,
+      new Date(2026, 1, 1),
+    );
+
+    it('should return no incomes', () => {
+      expect(result).toEqual({});
+    });
+  });
+  describe('When incomes of a year earlier are provided', () => {
+    const result = getIncomeFilteredByMonthOfOfAYear(
+      incomesOf2027,
+      new Date(2028, 4, 4),
+    );
+
+    it('should return incomes from last year', () => {
+      expect(result).toEqual({
+        '12/2027': [incomesOf2027[1]],
+      });
+    });
+  });
   describe('When incomes of different year are provided', () => {
     const result = getIncomeFilteredByMonthOfOfAYear(
       incomeWithDifferentDates,
@@ -30,7 +52,6 @@ describe('getIncomeFilteredByMonthOfOfAYear', () => {
         ['2/2025']: [incomeWithDifferentDates[0], incomeWithDifferentDates[6]],
         ['1/2025']: [incomeWithDifferentDates[2]],
         ['12/2024']: [incomeWithDifferentDates[3]],
-        ['4/2025']: [incomeWithDifferentDates[5]],
       });
     });
   });
