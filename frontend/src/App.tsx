@@ -24,13 +24,15 @@ function App() {
   };
   return (
     <div className="place-content-center w-full flex lg:min-h-[660px] ">
-      <main className="max-w-[1080px] mt-4 flex flex-wrap lg:justify-between h-full w-full justify-center">
+      <main className="flex flex-wrap lg:justify-between h-full w-full justify-center">
         <ExpensesAppHeader />
-        <ExpensesAppLeftSidebar
-          activePath={activePath}
-          setActivePath={setActivePath}
-        />
-        {displayMainContent()}
+        <section className="flex justify-start w-full gap-20">
+          <ExpensesAppLeftSidebar
+            activePath={activePath}
+            setActivePath={setActivePath}
+          />
+          <div className="mt-4 w-[70%]">{displayMainContent()}</div>
+        </section>
       </main>
     </div>
   );

@@ -6,7 +6,7 @@
   :root {
     --primary-color: #335384;
     --secondary-color: #5ba7d1;
-    --main-background: #cecece;
+    --main-background: #FFF;
   }
 }
 
@@ -14,7 +14,6 @@ body {
   background: var(--main-background);
   color: #000;
   font-family: 'Oswald', sans-serif;
-  max-height: 860px;
   height: 100%;
 }
 

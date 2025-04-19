@@ -45,7 +45,7 @@ interface expensesAppLeftSidebarProps {
 
 export const ExpensesAppLeftSidebar = (props: expensesAppLeftSidebarProps) => {
   return (
-    <aside className="rounded-lg border-2 border-white h-full bg-slate-50 lg:w-1/5 box-border p-4 w-3/4 mb-6 lg:mb-0">
+    <aside className="rounded-lg border-2 border-white min-h-screen bg-slate-50 lg:w-[10%] box-border p-4 w-3/4 mb-6 lg:mb-0 relative z-0">
       <div className="flex align-items-center h-20">
         <div className="flex place-content-center items-center align-items-center h-full w-20 h-20 border-mainBackground rounded-full border-2 mr-5">
           <FontAwesomeIcon icon={faUserTie} className="text-4xl" />

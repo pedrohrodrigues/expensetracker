@@ -37,8 +37,8 @@ export const DashboardAppDashboard = () => {
   }, [fetchIncome, fetchExpense]);
 
   return (
-    <div className="w-3/4 bg-slate-50 h-full box-border p-4 rounded-lg border-2">
-      <h2>Dashboard</h2>
+    <div className="w-3/4 bg-slate-50 h-[80%] box-border p-4 rounded-lg border-2">
+      <h2 className="text-2xl font-bold">Dashboard</h2>
       <div className="rounded-lg border-2 text-center border-box p-2 my-2">
         <h3 className="text-2xl">
           Total Balance:
