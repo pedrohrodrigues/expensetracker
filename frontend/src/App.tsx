@@ -31,7 +31,7 @@ function App() {
             activePath={activePath}
             setActivePath={setActivePath}
           />
-          <div className="mt-4 w-[70%]">{displayMainContent()}</div>
+          <div className="mt-6 w-[70%]">{displayMainContent()}</div>
         </section>
       </main>
     </div>

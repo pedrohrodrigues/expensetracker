@@ -7,6 +7,7 @@ export default {
         primary: 'var(--primary-color)',
         secondary: 'var(--secondary-color)',
         mainBackground: 'var(--main-background)',
+        sidebar: 'var(--sidebar-background)',
       },
     },
   },
