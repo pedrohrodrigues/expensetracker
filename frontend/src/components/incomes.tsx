@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useExpensesAppContext } from '../context/context';
 import { deleteIncome } from '../apiRequests/incomeRequests';
-import { calculateTotalValue } from '../helpers/generalHelpers';
+import {
+  calculateTotalValue,
+  getItemsForTheCurrentPage,
+  handleAmountOfPages,
+} from '../helpers/generalHelpers';
 import { AddIncomesAppDashboard, onSubmitMessageProps } from './addIncome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useFetchIncome } from '../hooks/useFetchIncome';
 
 export const IncomesAppDashboard = () => {
+  const totalItemsPerPage = 10;
   const [refreshList, setRefreshList] = useState(false);
+  const [pages, setPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [promiseMessage, setPromiseMessage] = useState<onSubmitMessageProps>({
     message: '',
     color: '',
@@ -39,6 +46,9 @@ export const IncomesAppDashboard = () => {
 
   useEffect(() => {
     fetchIncome();
+    setPages(
+      handleAmountOfPages(expensesAppState.incomes.length, totalItemsPerPage),
+    );
   }, [fetchIncome, refreshList]);
 
   return (
@@ -69,7 +79,11 @@ export const IncomesAppDashboard = () => {
               {promiseMessage.message}
             </div>
           )}
-          {expensesAppState.incomes.map((income, index) => {
+          {getItemsForTheCurrentPage(
+            currentPage,
+            totalItemsPerPage,
+            expensesAppState.incomes,
+          ).map((income, index) => {
             return (
               <div
                 key={index}
@@ -89,6 +103,22 @@ export const IncomesAppDashboard = () => {
               </div>
             );
           })}
+          <section className="flex justify-start w-full">
+            {pages > 1 &&
+              Array.from({ length: pages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={`${
+                    currentPage === i + 1 ? 'bg-blue-500 text-white' : ''
+                  } border-2 border-box p-2 rounded-lg m-1`}
+                  onClick={() => {
+                    setCurrentPage(i + 1);
+                  }}
+                >
+                  {i + 1}
+                </button>
+              ))}
+          </section>
         </section>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { getIncomeDto } from '../types/dtoTypes';
+import { getExpenseDto, getIncomeDto } from '../types/dtoTypes';
 
 export const calculateTotalValue = (receivedValue: number[]): number => {
   if (!receivedValue) {
@@ -33,4 +33,20 @@ export const getIncomeFilteredByMonthOfOfAYear = (
     {},
   );
   return incomesFilteredByMonth;
+};
+
+export const getItemsForTheCurrentPage = (
+  page: number,
+  itemsPerPage: number,
+  items: getIncomeDto[] | getExpenseDto[],
+) => {
+  const lastPostIndex = page * itemsPerPage;
+  return items.slice(lastPostIndex - itemsPerPage, lastPostIndex);
+};
+
+export const handleAmountOfPages = (
+  totalNumberOfItems: number,
+  itemsPerPage: number,
+) => {
+  return Math.ceil(totalNumberOfItems / itemsPerPage);
 };
